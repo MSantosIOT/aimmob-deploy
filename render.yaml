@@ -1,9 +1,30 @@
 services:
   - type: web
-    name: aimmob-langflow
+    name: aimm-langflow
     env: docker
-    plan: free
-    dockerfilePath: ./Dockerfile
+    repo: https://seu-repo.git  # Substitua pelo link do seu repositório
+    plan: starter
+    envVars:
+      - key: LANGFLOW_DATABASE_URL
+        value: postgresql://aimmob:aimmob123@aimm-postgres:5432/aimmobdb
+      - key: LANGFLOW_CONFIG_DIR
+        value: /app/langflow
+    dockerCommand: ["langflow", "run"]
+    ports:
+      - 7860
+    healthCheckPath: "/"
+    dependsOn:
+      - aimm-postgres
+    disk:
+      name: langflow-storage
+      mountPath: /app/langflow
+
+  - type: pserv
+    name: aimm-postgres
+    env: docker
+    repo: https://seu-repo.git  # Substitua pelo link do seu repositório
+    plan: starter
+    dockerfilePath: Dockerfile  # Caso tenha um Dockerfile personalizado, ajuste o caminho
     envVars:
       - key: POSTGRES_USER
         value: aimmob
@@ -11,3 +32,27 @@ services:
         value: aimmob123
       - key: POSTGRES_DB
         value: aimmobdb
+    disk:
+      name: postgres-data
+      mountPath: /var/lib/postgresql/data
+    ports:
+      - 5432
+
+  - type: web
+    name: aimm-pgadmin
+    env: docker
+    repo: https://seu-repo.git  # Substitua pelo link do seu repositório
+    plan: starter
+    envVars:
+      - key: PGADMIN_DEFAULT_EMAIL
+        value: comercial@aimmob.com.br
+      - key: PGADMIN_DEFAULT_PASSWORD
+        value: aimmob123
+    dockerCommand: ["pgadmin4"]
+    ports:
+      - 80
+    dependsOn:
+      - aimm-postgres
+    disk:
+      name: pgadmin-storage
+      mountPath: /var/lib/pgadmin
