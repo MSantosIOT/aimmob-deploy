@@ -9,33 +9,13 @@ services:
         value: postgresql://aimmob:aimmob123@aimm-postgres:5432/aimmobdb
       - key: LANGFLOW_CONFIG_DIR
         value: /app/langflow
-    dockerCommand: ["langflow", "run"]
+    startCommand: ["langflow", "run"]
     ports:
       - 7860
     healthCheckPath: "/"
-    dependsOn:
-      - aimm-postgres
     disk:
       name: langflow-storage
       mountPath: /app/langflow
-
-  - type: pserv
-    name: aimm-postgres
-    env: docker
-    image: postgres:latest  # Usa a imagem oficial do PostgreSQL
-    plan: starter
-    envVars:
-      - key: POSTGRES_USER
-        value: aimmob
-      - key: POSTGRES_PASSWORD
-        value: aimmob123
-      - key: POSTGRES_DB
-        value: aimmobdb
-    disk:
-      name: postgres-data
-      mountPath: /var/lib/postgresql/data
-    ports:
-      - 5432
 
   - type: web
     name: aimm-pgadmin
@@ -47,11 +27,8 @@ services:
         value: comercial@aimmob.com.br
       - key: PGADMIN_DEFAULT_PASSWORD
         value: aimmob123
-    dockerCommand: ["pgadmin4"]
     ports:
       - 80
-    dependsOn:
-      - aimm-postgres
     disk:
       name: pgadmin-storage
       mountPath: /var/lib/pgadmin
