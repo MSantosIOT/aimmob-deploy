@@ -2,7 +2,7 @@ services:
   - type: web
     name: aimm-langflow
     env: docker
-    repo: https://seu-repo.git  # Substitua pelo link do seu repositório
+    image: langflowai/langflow:latest  # Usa a imagem oficial sem precisar de Dockerfile
     plan: starter
     envVars:
       - key: LANGFLOW_DATABASE_URL
@@ -22,9 +22,8 @@ services:
   - type: pserv
     name: aimm-postgres
     env: docker
-    repo: https://seu-repo.git  # Substitua pelo link do seu repositório
+    image: postgres:latest  # Usa a imagem oficial do PostgreSQL
     plan: starter
-    dockerfilePath: Dockerfile  # Caso tenha um Dockerfile personalizado, ajuste o caminho
     envVars:
       - key: POSTGRES_USER
         value: aimmob
@@ -41,7 +40,7 @@ services:
   - type: web
     name: aimm-pgadmin
     env: docker
-    repo: https://seu-repo.git  # Substitua pelo link do seu repositório
+    image: dpage/pgadmin4:latest  # Usa a imagem oficial do PgAdmin
     plan: starter
     envVars:
       - key: PGADMIN_DEFAULT_EMAIL
