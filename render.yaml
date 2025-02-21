@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aimmob-langflow
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: POSTGRES_USER
+        value: aimmob
+      - key: POSTGRES_PASSWORD
+        value: aimmob123
+      - key: POSTGRES_DB
+        value: aimmobdb
